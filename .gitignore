@@ -1,129 +1,130 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+#Hangman with basic  graphics and 7 chances 
 
-# C extensions
-*.so
+words = ["aback","abaft","abandoned","abashed","aberrant","abhorrent","abiding","abject","ablaze","able","abnormal","aboard","aboriginal","abortive","abounding","abrasive","abrupt","absent","absorbed","absorbing","abstracted","absurd","abundant","abusive","acceptable","accessible","accidental","accurate","acid","acidic","acoustic","acrid","actually","ad hoc","adamant","adaptable","addicted","adhesive","adjoining","adorable","adventurous","afraid","aggressive","agonizing","agreeable","ahead","ajar","alcoholic","alert","alike","alive","alleged","alluring","aloof","amazing","ambiguous","ambitious","amuck","amused","amusing","ancient","angry","animated","annoyed","annoying","anxious","apathetic","aquatic","aromatic","arrogant","ashamed","aspiring","assorted","astonishing","attractive","auspicious","automatic","available","average","awake","aware","awesome","awful","axiomatic","bad","barbarous","bashful","bawdy","beautiful","befitting","belligerent","beneficial","bent","berserk","best","better","bewildered","big","billowy","bite-sized","bitter","bizarre","black","black-and-white","bloody","blue","blue-eyed","blushing","boiling","boorish","bored","boring","bouncy","boundless","brainy","brash","brave","brawny","breakable","breezy","brief","bright","bright","broad","broken","brown","bumpy","burly","bustling","busy","cagey","calculating","callous","calm","capable","capricious","careful","careless","caring","cautious","ceaseless","certain"]
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+import random
+import string 
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
+graphic = {
+        0: """
+                ___________
+               | /        | 
+               |/        ( )
+               |          |
+               |         / \\
+               |
+           """,
+        1: """
+                ___________
+               | /        | 
+               |/        ( )
+               |          |
+               |         / 
+               |
+            """,
+        2: """
+                ___________
+               | /        | 
+               |/        ( )
+               |          |
+               |          
+               |
+            """,
+        3: """
+                ___________
+               | /        | 
+               |/        ( )
+               |          
+               |          
+               |
+            """,
+        4: """
+                ___________
+               | /        | 
+               |/        
+               |          
+               |          
+               |
+            """,
+        5: """
+                ___________
+               | /        
+               |/        
+               |          
+               |          
+               |
+            """,
+        6: """
+               |
+               |
+               |
+               |
+               |
+            """,
+        7: "",
+    }
 
-# Translations
-*.mo
-*.pot
 
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-.python-version
-
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
-
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
+def get_valid_word(words):
+  
+  word = random.choice(words)
+  while "-" in word or " " in word or "_" in word:
+     word = random.choice(words)
+ 
+  return word.upper()
+  
+  
+def hangman():
+  
+  word = get_valid_word(words)
+  word_letters = set( word)
+  possible_letters = set(string.ascii_uppercase)
+  used_letters = set()
+  
+  
+  lives = 7
+  #have the user input a letter
+  #compare teh letter to the letters of a given word
+  #if the letter matches, add it to the word_guess
+  #if not, subtract a life
+  #while life > 0, keep running the loop
+  #when life = 0, print a failure message
+  #If the letter was already guessed, print a message saying you have already used the letter unless it is still required in the word(Multiple similar letters.)
+  
+  while len(word_letters) > 0 and lives > -1:
+    
+    print(graphic[lives])
+    print("You have", lives, "lives left and you have used the following letters:"," " .join(used_letters))
+  
+  
+    #This part of the code updates you on your progress
+    word_update = [(letter if letter in used_letters else "_" )for letter in word]
+    print ("Word Progress: ", " " .join(word_update))
+  
+  
+    guess = input("Guess a letter: ").upper()
+    
+    if guess in possible_letters - used_letters:
+      used_letters.add(guess)
+      if guess in word_letters:
+        word_letters.remove(guess)
+        print("")
+        
+      else:
+        lives = lives-1
+        print("\nYour letter, %s, is not in the word." %guess)
+    elif guess in used_letters:
+      print("\nYou have already used this letter. Try again")
+    
+    else:
+      print("That is not a valid character. Try again")
+      
+  if lives == -1:
+    print("You ran out of chances. Try another word. The word was:" , word)
+    
+  elif len(word_letters) ==0:
+    print("Yaay, You guessed the word:", word, "correctly")
+    
+hangman()
